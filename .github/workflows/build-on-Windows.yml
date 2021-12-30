@@ -34,4 +34,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: SVT-AV1_${{ matrix.version }}
-        path: SVT-AV1/Bin/Release/SvtAv1EncApp.exe SVT-AV1/LICENSE.md SVT-AV1/PATENTS.md
+        path: |
+          SVT-AV1/Bin/Release/SvtAv1EncApp.exe
+          SVT-AV1/LICENSE.md
+          SVT-AV1/PATENTS.md
