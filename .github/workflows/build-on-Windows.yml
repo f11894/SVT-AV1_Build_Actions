@@ -5,6 +5,9 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        version: [v0.8.7, v0.8.6]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -30,5 +33,5 @@ jobs:
     - name: Upload result
       uses: actions/upload-artifact@v2
       with:
-        name: SVT-AV1-win64bit
+        name: SVT-AV1_${{ matrix.version }}
         path: SVT-AV1/Bin/Release/SvtAv1EncApp.exe
