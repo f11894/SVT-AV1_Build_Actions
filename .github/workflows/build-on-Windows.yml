@@ -7,7 +7,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        version: [v0.8.7, v0.8.6, 0.8.8rc1, 0.8.8rc2]
+        version: [v0.8.7, v0.8.6, 0.8.8-rc1, 0.8.8-rc2]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
