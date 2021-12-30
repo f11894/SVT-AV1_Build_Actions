@@ -30,9 +30,9 @@ jobs:
         set MSYSTEM=MINGW64
         set HOME=${{ github.workspace }}
         C:\msys64\usr\bin\bash -lc "cd SVT-AV1/binary && ninja"
-        copy /y SVT-AV1/Bin/Release/SvtAv1EncApp.exe SvtAv1EncApp.exe
-        copy /y SVT-AV1/LICENSE.md LICENSE.md
-        copy /y SVT-AV1/PATENTS.md PATENTS.md
+        copy /y SVT-AV1\Bin/Release\SvtAv1EncApp.exe SvtAv1EncApp.exe
+        copy /y SVT-AV1\LICENSE.md LICENSE.md
+        copy /y SVT-AV1\PATENTS.md PATENTS.md
     - name: Upload result
       uses: actions/upload-artifact@v2
       with:
