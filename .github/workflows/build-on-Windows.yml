@@ -22,7 +22,7 @@ jobs:
       run: |
         set MSYSTEM=MINGW64
         set HOME=${{ github.workspace }}
-        git clone -depth 1 -b ${{ matrix.version }} https://gitlab.com/AOMediaCodec/SVT-AV1.git
+        git clone --depth 1 -b ${{ matrix.version }} https://gitlab.com/AOMediaCodec/SVT-AV1.git
         C:\msys64\usr\bin\bash -lc "cd SVT-AV1 && mkdir binary && cd binary && cmake .. -G 'Ninja' -D BUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS='-flto' -DCMAKE_CXX_FLAGS='-flto' -DCMAKE_EXE_LINKER_FLAGS='-static -static-libgcc -flto -s' -DCMAKE_BUILD_TYPE=Release"
     - name: make
       shell: cmd
