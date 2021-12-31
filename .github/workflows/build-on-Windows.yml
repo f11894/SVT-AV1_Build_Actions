@@ -7,7 +7,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        version: [0.8.8-rc2]
+        branch: [0.8.8-rc2]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -25,7 +25,7 @@ jobs:
         set CFLAGS=-flto -v
         set CXXFLAGS=%CFLAGS%
         set LDFLAGS=-static -static-libgcc -flto -s
-        git clone --depth 1 -b ${{ matrix.version }} https://gitlab.com/AOMediaCodec/SVT-AV1.git
+        git clone --depth 1 -b ${{ matrix.branch }} https://gitlab.com/AOMediaCodec/SVT-AV1.git
         C:\msys64\usr\bin\bash -lc "cd SVT-AV1 && mkdir binary && cd binary && cmake .. -G 'Ninja' -D BUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release"
         C:\msys64\usr\bin\bash -lc "cd SVT-AV1/binary && ninja"
         copy /y SVT-AV1\Bin\Release\SvtAv1EncApp.exe SvtAv1EncApp.exe
@@ -34,7 +34,7 @@ jobs:
     - name: Upload result
       uses: actions/upload-artifact@v2
       with:
-        name: SVT-AV1_${{ matrix.version }}
+        name: SVT-AV1_${{ matrix.branch }}
         path: |
           SvtAv1EncApp.exe
           LICENSE.md
