@@ -17,18 +17,16 @@ jobs:
       shell: cmd
       run: |
         C:\msys64\usr\bin\bash -lc "pacman -S mingw-w64-x86_64-nasm mingw-w64-x86_64-yasm mingw-w64-x86_64-meson mingw-w64-x86_64-ninja --noconfirm"
-    - name: configure
+    - name: build
       shell: cmd
       run: |
         set MSYSTEM=MINGW64
         set HOME=${{ github.workspace }}
+        set CFLAGS="-flto -v"
+        set CXXFLAGS=%CFLAGS%
+        set LDFLAGS="-static -static-libgcc -flto -s"
         git clone --depth 1 -b ${{ matrix.version }} https://gitlab.com/AOMediaCodec/SVT-AV1.git
-        C:\msys64\usr\bin\bash -lc "cd SVT-AV1 && mkdir binary && cd binary && cmake .. -G 'Ninja' -D BUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS='-flto' -DCMAKE_CXX_FLAGS='-flto' -DCMAKE_EXE_LINKER_FLAGS='-static -static-libgcc -flto -s' -DCMAKE_BUILD_TYPE=Release"
-    - name: make
-      shell: cmd
-      run: |
-        set MSYSTEM=MINGW64
-        set HOME=${{ github.workspace }}
+        C:\msys64\usr\bin\bash -lc "cd SVT-AV1 && mkdir binary && cd binary && cmake .. -G 'Ninja' -D BUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release"
         C:\msys64\usr\bin\bash -lc "cd SVT-AV1/binary && ninja"
         copy /y SVT-AV1\Bin\Release\SvtAv1EncApp.exe SvtAv1EncApp.exe
         copy /y SVT-AV1\LICENSE.md LICENSE.md
