@@ -7,7 +7,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        branch: [v0.8.6, v0.8.7]
+        branch: [v0.8.7]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -16,7 +16,8 @@ jobs:
     - name: Install dependencies
       shell: cmd
       run: |
-        C:\msys64\usr\bin\bash -lc "pacman -S mingw-w64-x86_64-nasm mingw-w64-x86_64-yasm mingw-w64-x86_64-meson mingw-w64-x86_64-ninja --noconfirm"
+        set MSYSTEM=CLANG64
+        C:\msys64\usr\bin\bash -lc "pacman -S cmake mingw-w64-x86_64-nasm mingw-w64-x86_64-yasm mingw-w64-x86_64-meson mingw-w64-x86_64-ninja --noconfirm"
     - name: build
       shell: cmd
       run: |
@@ -24,7 +25,7 @@ jobs:
         set HOME=${{ github.workspace }}
         set CFLAGS=-flto -v
         set CXXFLAGS=%CFLAGS%
-        set LDFLAGS=-static -flto -s
+        set LDFLAGS=-static -static-libc++ -flto -s
         git clone --depth 1 -b ${{ matrix.branch }} https://gitlab.com/AOMediaCodec/SVT-AV1.git
         C:\msys64\usr\bin\bash -lc "cd SVT-AV1 && mkdir binary && cd binary && cmake .. -G 'Ninja' -D BUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release"
         C:\msys64\usr\bin\bash -lc "cd SVT-AV1/binary && ninja"
