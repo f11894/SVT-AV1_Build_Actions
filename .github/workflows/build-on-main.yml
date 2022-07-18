@@ -15,23 +15,41 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: Install dependencies
-      shell: cmd
-      run: |
-        C:\msys64\usr\bin\bash -lc "pacman -S --needed mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc mingw-w64-x86_64-nasm mingw-w64-x86_64-yasm mingw-w64-x86_64-ninja mingw-w64-x86_64-pkg-config mingw-w64-x86_64-meson git base-devel autotools --noconfirm"
+    - uses: msys2/setup-msys2@v2
+      with:
+        location: D:\msys2_github\
+        update: true
+        install: >-
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-nasm
+            mingw-w64-x86_64-yasm
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-pkg-config
+            mingw-w64-x86_64-meson
+            git
+            base-devel
+            autotools
+        msystem: MINGW64
+        path-type: strict
     - name: build
+      shell: msys2 {0}
+      run: |
+        export HOME=${{ github.workspace }}
+        export LDFLAGS="-static -static-libgcc -static-libstdc++ -s"
+        export CFLAGS=-"flto"
+        export CXXFLAGS="$CFLAGS"
+        git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git
+        cd SVT-AV1
+        mkdir binary
+        cd binary
+        cmake .. -G 'Ninja' -D BUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
+        ninja
+    - name: postprocessing
       shell: cmd
       run: |
-        set MSYSTEM=MINGW64
-        set HOME=${{ github.workspace }}
-        set CFLAGS=-flto -v
-        set CXXFLAGS=%CFLAGS%
-        set LDFLAGS=-static -static-libgcc -static-libstdc++ -flto -s
-        git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git
         for /f "delims=" %%i in ('git -C SVT-AV1 log -1 --format^="%%h"') do set "shorthash=%%i"
         for /f "delims=" %%i in ('git -C SVT-AV1 rev-list --count HEAD') do set "revision=%%i"
-        C:\msys64\usr\bin\bash -lc "cd SVT-AV1 && mkdir binary && cd binary && cmake .. -G 'Ninja' -D BUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release"
-        C:\msys64\usr\bin\bash -lc "cd SVT-AV1/binary && ninja"
         copy /y SVT-AV1\Bin\Release\SvtAv1EncApp.exe SvtAv1EncApp.exe
         copy /y SVT-AV1\LICENSE.md LICENSE.md
         copy /y SVT-AV1\PATENTS.md PATENTS.md
@@ -73,3 +91,4 @@ jobs:
           assets+=("-a" "$asset")
         done
         hub release create "${assets[@]}" -m "$RELEASE_NAME" "$TAG_NAME"
+
