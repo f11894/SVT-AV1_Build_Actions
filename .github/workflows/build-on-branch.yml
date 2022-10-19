@@ -7,7 +7,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        branch: [v1.2.1]
+        branch: [v1.3.0]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -35,7 +35,7 @@ jobs:
       run: |
         export HOME=${{ github.workspace }}
         export LDFLAGS="-static -static-libgcc -static-libstdc++ -s"
-        export CFLAGS=-"flto"
+        export CFLAGS="-flto"
         export CXXFLAGS="$CFLAGS"
         git clone --depth 1 -b ${{ matrix.branch }} https://gitlab.com/AOMediaCodec/SVT-AV1.git
         cd SVT-AV1
