@@ -37,7 +37,6 @@ jobs:
       run: |
         export HOME=${{ github.workspace }}
         export LDFLAGS="-static -static-libgcc -static-libstdc++ -s"
-        export CFLAGS="-flto"
         export CXXFLAGS="$CFLAGS"
         git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git
         cd SVT-AV1
