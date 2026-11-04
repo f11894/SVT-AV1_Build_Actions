@@ -36,7 +36,7 @@ jobs:
         export HOME=${{ github.workspace }}
         export LDFLAGS="-static -static-libgcc -static-libstdc++ -s"
         export CXXFLAGS="$CFLAGS"
-        git clone --depth 1 -b ${{ matrix.branch }} https://gitlab.com/AOMediaCodec/SVT-AV1.git
+        git clone --depth 1 -b ${{ matrix.branch }} https://github.com/AOMediaCodec/SVT-AV1
         cd SVT-AV1
         mkdir binary
         cd binary && cmake .. -G 'Ninja' -D BUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
